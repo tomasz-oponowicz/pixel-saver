@@ -25,83 +25,83 @@ const DCONF_META_PATH = 'org.gnome.desktop.wm.preferences';
 
 let actors = [], boxes = [];
 function createButtons() {
-	// Ensure we do not create buttons twice.
-	destroyButtons();
+	// // Ensure we do not create buttons twice.
+	// destroyButtons();
 	
-	actors = [
-		new St.Bin({ style_class: 'box-bin'}),
-		new St.Bin({ style_class: 'box-bin'})
-	];
+	// actors = [
+	// 	new St.Bin({ style_class: 'box-bin'}),
+	// 	new St.Bin({ style_class: 'box-bin'})
+	// ];
 	
-	boxes = [
-		new St.BoxLayout({ style_class: 'button-box' }),
-		new St.BoxLayout({ style_class: 'button-box' })
-	];
+	// boxes = [
+	// 	new St.BoxLayout({ style_class: 'button-box' }),
+	// 	new St.BoxLayout({ style_class: 'button-box' })
+	// ];
 	
-	actors.forEach(function(actor, i) {
-		actor.add_actor(boxes[i]);
-	});
+	// actors.forEach(function(actor, i) {
+	// 	actor.add_actor(boxes[i]);
+	// });
 	
-	let order = new Gio.Settings({schema_id: DCONF_META_PATH}).get_string('button-layout');
-	LOG('Buttons layout : ' + order);
+	// let order = new Gio.Settings({schema_id: DCONF_META_PATH}).get_string('button-layout');
+	// LOG('Buttons layout : ' + order);
 	
-	if (order.indexOf(':') == -1) {
-		LOG('Button layout empty')
-		return
-	}
+	// if (order.indexOf(':') == -1) {
+	//	LOG('Button layout empty')
+	//	return
+	//}
 	
-	let orders = order.replace(/ /g, '').split(':');
+	//let orders = order.replace(/ /g, '').split(':');
 	
-	orders[0] = orders[0].split(',');
+	// orders[0] = orders[0].split(',');
 	
-	// Check if it's actually exists, if not then create it
-	if(typeof orders[1] == 'undefined') orders[1] = '';
-	orders[1] = orders[1].split(',');
+	// // Check if it's actually exists, if not then create it
+	// if(typeof orders[1] == 'undefined') orders[1] = '';
+	// orders[1] = orders[1].split(',');
 	
-	const callbacks = {
-		minimize : minimize,
-		maximize : maximize,
-		close    : close
-	};
+	// const callbacks = {
+	// 	minimize : minimize,
+	// 	maximize : maximize,
+	// 	close    : close
+	// };
 	
-	for (let bi = 0; bi < boxes.length; ++bi) {
-		let order = orders[bi],
-			box = boxes[bi];
+	// for (let bi = 0; bi < boxes.length; ++bi) {
+	// 	let order = orders[bi],
+	// 		box = boxes[bi];
 		
-		for (let i = 0; i < order.length; ++i) {
-			if (!order[i]) {
-				continue;
-			}
+	// 	for (let i = 0; i < order.length; ++i) {
+	// 		if (!order[i]) {
+	// 			continue;
+	// 		}
 			
-			if (!callbacks[order[i]]) {
-				// Skip if the button's name is not right...
-				WARN("\'%s\' is not a valid button.".format(order[i]));
-				continue;
-			}
+	// 		if (!callbacks[order[i]]) {
+	// 			// Skip if the button's name is not right...
+	// 			WARN("\'%s\' is not a valid button.".format(order[i]));
+	// 			continue;
+	// 		}
 			
-			let button = new St.Button({
-				style_class: order[i]  + ' window-button',
-				track_hover: true
-			});
+	// 		let button = new St.Button({
+	// 			style_class: order[i]  + ' window-button',
+	// 			track_hover: true
+	// 		});
 			
-			button.connect('button-release-event', leftclick(callbacks[order[i]]));
-			box.add(button);
-		}
-	}
+	// 		button.connect('button-release-event', leftclick(callbacks[order[i]]));
+	// 		box.add(button);
+	// 	}
+	// }
 	
-	Mainloop.idle_add(function () {
-		// 1 for activity button and -1 for the menu
-		if (boxes[0].get_children().length) {
-			Main.panel._leftBox.insert_child_at_index(actors[0], 1);
-		}
+	// Mainloop.idle_add(function () {
+	// 	// 1 for activity button and -1 for the menu
+	// 	if (boxes[0].get_children().length) {
+	// 		Main.panel._leftBox.insert_child_at_index(actors[0], 1);
+	// 	}
 		
-		if (boxes[1].get_children().length) {
-			Main.panel._rightBox.insert_child_at_index(actors[1], Main.panel._rightBox.get_children().length - 1);
-		}
+	// 	if (boxes[1].get_children().length) {
+	// 		Main.panel._rightBox.insert_child_at_index(actors[1], Main.panel._rightBox.get_children().length - 1);
+	// 	}
 		
-		updateVisibility();
-		return false;
-	});
+	// 	updateVisibility();
+	// 	return false;
+	// });
 }
 
 function destroyButtons() {
